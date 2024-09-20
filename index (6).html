@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <script src="https://kit.fontawesome.com/ac7a48620a.js" crossorigin="anonymous"></script>
+    <link rel="icon" type="image/png" href="https://i.imgur.com/ppAKrZD.png"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Ga+Maamli&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur d'acompte</title>
+    <style>
+        body {
+            font-family: Barlow;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+        .banner {
+            height: auto;
+            margin: auto;
+            font-size: 42px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .banner-title {
+            margin-top: -5px;
+        }
+        .banner-icon {
+            text-align: center;
+        }
+        .banner-icon-src {
+            width: 80px;
+        }
+      
+        #mensualite {
+            width: 30%;
+            padding: 8px;
+            margin-bottom: -5px;
+            box-sizing: border-box;
+            text-align: center;
+          font-size : 18px;
+          border-radius: 5px;
+        }
+      
+        #acompte {
+            width: 30%;
+            padding: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            text-align: center;
+          font-size : 18px;
+          border-radius: 5px;
+        }
+      
+        h4 {
+          margin-bottom: 40px;
+          font-weight: normal;
+        }
+      
+        h2 {
+          margin-bottom: -10px;
+          font-weight: normal;
+        }
+      
+        #acompteDemande {
+            width: 30%;
+            padding: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            text-align: center;
+            font-size : 18px;
+            border-radius: 5px;
+        }
+      
+        #calculer {
+            width: 30%;
+            padding: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            text-align: center;
+          font-size : 18px;
+        }
+      
+        #calculer {
+            font-family: Barlow;
+            font-weight: normal;
+            font-size: 14px;
+            text-transform: uppercase;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition-property: background-color;
+            transition-duration: 100ms;
+        }
+        #calculer:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="banner">
+      <div class="banner-icon">
+        <img class="banner-icon-src" src="https://i.imgur.com/ppAKrZD.png"></img>
+      </div>
+      <div class="banner-title" id="banner-title">
+        Calculateur d'acompte
+      </div>
+    </div>
+  
+    <h3>Financement affiché</h3>
+
+    <!-- Champ de saisie A -->
+    <label for="acompte">Acompte</label>
+    <input type="text" id="acompte" placeholder="0,00 $">
+
+    <!-- Champ de saisie B -->
+    <label for="mensualite">Mensualité</label>
+    <input type="text" id="mensualite" placeholder="0,00 $">
+
+    <!-- Total du financement -->
+    <h4>Total du financement: <span id="totalFinancement">0,00 $</span></h4>
+    
+     <h3>Financement ajusté</h3>
+  
+    <!-- Menu déroulant Acompte demandé -->
+    <div class="acompteDemande">
+    <label for="acompteDemande">Acompte demandé</label>
+    <select id="acompteDemande">
+        <option value="0">0%</option>
+        <option value="10">10%</option>
+        <option value="20">20%</option>
+        <option value="30">30%</option>
+        <option value="40">40%</option>
+        <option value="50">50%</option>
+        <option value="60">60%</option>
+        <option value="70">70%</option>
+        <option value="80">80%</option>
+        <option value="90">90%</option>
+        <option value="100">100%</option>
+    </select>
+    </div>
+
+    <!-- Bouton Calculer -->
+    <button id="calculer">Calculer</button>
+
+    <!-- Acompte recalculé -->
+    <h2>Acompte : <span id="acompteRecalcule">0,00 $</span></h2>
+
+    <!-- Mensualité recalculée -->
+    <h2>Mensualité : <span id="mensualiteRecalculee">0,00 $</span></h2>
+
+    <script>
+        // Fonction pour formater un nombre en dollars canadiens avec virgule et symbole $.
+        function formatDollar(value) {
+            if (isNaN(value)) return "0,00 $";
+            return parseFloat(value).toFixed(2).replace('.', ',') + ' $';
+        }
+
+        // Fonction pour calculer le total du financement (24 fois mensualité + acompte)
+        function calculerTotalFinancement() {
+            var acompte = parseFloat(document.getElementById('acompte').value.replace(',', '.').replace(' $', ''));
+            var mensualite = parseFloat(document.getElementById('mensualite').value.replace(',', '.').replace(' $', ''));
+            
+            if (isNaN(acompte)) acompte = 0;
+            if (isNaN(mensualite)) mensualite = 0;
+
+            // Calcul du total du financement : 24 fois la mensualité + acompte
+            var totalFinancement = acompte + mensualite * 24;
+            document.getElementById('totalFinancement').textContent = formatDollar(totalFinancement);
+        }
+
+        // Quand l'utilisateur quitte le champ "Acompte", on reformate et recalcule le total.
+        document.getElementById('acompte').addEventListener('blur', function() {
+            var acompte = document.getElementById('acompte').value.replace(',', '.');
+            document.getElementById('acompte').value = formatDollar(acompte);
+            calculerTotalFinancement();  // Recalculer le total après formatage
+        });
+
+        // Quand l'utilisateur quitte le champ "Mensualité", on reformate et recalcule le total.
+        document.getElementById('mensualite').addEventListener('blur', function() {
+            var mensualite = document.getElementById('mensualite').value.replace(',', '.');
+            document.getElementById('mensualite').value = formatDollar(mensualite);
+            calculerTotalFinancement();  // Recalculer le total après formatage
+        });
+
+        // Fonction du bouton "Calculer"
+        document.getElementById('calculer').addEventListener('click', function() {
+            var totalFinancement = parseFloat(document.getElementById('totalFinancement').textContent.replace(',', '.').replace(' $', ''));
+            var acompteDemande = parseFloat(document.getElementById('acompteDemande').value) / 100;
+
+            // Calcul de l'acompte recalculé
+            var acompteRecalcule = totalFinancement * acompteDemande;
+            document.getElementById('acompteRecalcule').textContent = formatDollar(acompteRecalcule);
+
+            // Calcul de la mensualité recalculée (différence entre total financement et acompte, divisé par 24)
+            var mensualiteRecalculee = (totalFinancement - acompteRecalcule) / 24;
+            document.getElementById('mensualiteRecalculee').textContent = formatDollar(mensualiteRecalculee);
+        });
+    </script>
+
+</body>
+</html>
